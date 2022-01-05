@@ -129,3 +129,37 @@ const order = (words) => {
         .join(" ");
 };
 console.log("13)", order("2b 1a 4d 3c"));
+// 14)
+// Input A "stock": ["ABCT 2", "BCD 4", "BXZGT 1"]
+// Input B "categories": ["B", "G", "A"]
+// Espected Output: "(B : 5) - (G : 0) - (A : 2)"
+// If Input A or B === [] return ''
+const stockList = (listOfArt, listOfCat) => {
+    if (!listOfArt.length || !listOfCat.length) {
+        return "";
+    }
+    let helperObj = {};
+    for (let i of listOfArt) {
+        helperObj[i[0]]
+            ? (helperObj[i[0]] += +i.match(/\d+/))
+            : (helperObj[i[0]] = +i.match(/\d+/));
+    }
+    let helperArr = [];
+    for (let i of listOfCat) {
+        helperArr.push(`(${i} : ${helperObj[i] || "0"})`);
+    }
+    return helperArr.join(" - ");
+};
+console.log("14)", stockList(["D 56"], ["A", "B", "C", "D"]));
+// 15) Given two arrays a and b checks via true or false whether the two arrays have the "same" elements, with the same multiplicities (appearences). "Same" means here that the elements in b are the elements in a squared, regardless of the order.
+const comp = (a1, a2) => {
+    if (a1 === null || a2 === null)
+        return false;
+    let rootsquaredArray = [];
+    for (let i of a2) {
+        rootsquaredArray.push(Math.sqrt(i));
+    }
+    const check = a1.sort((a, b) => a - b).join() === rootsquaredArray.sort((a, b) => a - b).join();
+    return check;
+};
+console.log('15)', comp([], []));
