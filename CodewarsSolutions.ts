@@ -129,6 +129,7 @@ function narcissistic(value: number): boolean {
 console.log("10)", narcissistic(153));
 
 // 11) Given a string, detect whether or not it is a pangram (contains every single letter of the alphabet) via true or false
+
 function isPangram(phrase: string): boolean {
   const alphabet: string = "abcdefghijklmnopqrstuvwxyz";
   for (let letter of alphabet) {
@@ -231,3 +232,120 @@ console.log(
   "17)",
   foldArray([12, 13, 454, 36, 56, 56, 7, 9, 54, 100, 2345, 12], 1)
 );
+
+// 18) Given a string of words, you need to find the highest scoring word. Each letter of a word scores points according to its position in the alphabet: a = 1, b = 2, c = 3 etc. You need to return the highest scoring word as a string. If two words score the same, return the word that appears earliest in the original string.
+
+function high(str: string): string {
+  const alph: string = "0abcdefghijklmnopqrstuvwxyz";
+  const words: string[] = str.toLowerCase().split(" ");
+  const wordsScores: number[] = [];
+  for (let word of words) {
+    let wordScore: number = 0;
+    [...word].forEach((letter) => {
+      wordScore += alph.indexOf(letter);
+    });
+    wordsScores.push(wordScore);
+  }
+  words.sort(
+    (a, b) => wordsScores[words.indexOf(b)] - wordsScores[words.indexOf(a)]
+  );
+  return words[0];
+}
+console.log("18)", high("Hello my name is xyz"));
+
+// 19) Given a string, the first letter must be converted to its ASCII code and second letter must be switched with the last letter. ej: encryptThis "hello world" == "104olle 119drlo"
+
+function encryptThis(str: string): string {
+  let toEncrypt: string[] = str.split(" ");
+  let encryptedPhrase: string[] = [];
+  for (let word of toEncrypt) {
+    let encryptedWord: string[] = [];
+    encryptedWord.push(
+      word.charCodeAt(0).toString(),
+      word.length > 1 ? word.slice(-1) : "",
+      word.length === 3
+        ? word[1]
+        : word.length > 3
+        ? word.slice(2, word.length - 1) + word[1]
+        : ""
+    );
+    encryptedPhrase.push(encryptedWord.join(""));
+  }
+  return str.trim() && encryptedPhrase.join(" ");
+}
+console.log("19)", encryptThis("Succesfully encrypted message"));
+//__________________________________________________________________________________________________________
+// Other less-verbose approach: replace() using RegEX + callback
+// RegEx:       /\b(\S)(\S?)(\S*?)(\S?)\b/g
+// Callback:    (_, a, b, c, d) => `${a.charCodeAt(0)}${d}${c}${b}`
+// replace:     str.replace( /\b(\S)(\S?)(\S*?)(\S?)\b/g , (_, a, b, c, d)=>`${a.charCodeAt(0)}${d}${c}${b}` )
+// When we use a callback on replace we get 5 arg fields to work with:
+//    1) the matched substring,
+//    2) [c1, c2, c3..] = each RegEx capture group between (),
+//    3) The offset (index start) of matched sub-string,
+//    4) The whole string examined,
+//    5) Object with {[group-names] : [matched-substring]} pairs
+// In our case we take the matched substring (_) although we wont use it, to later recieve the 4 capture groups (a,b,c,d) nad work with them on a template literal
+//___________________________________________________________________________________________________________
+
+// 20) A function that deciphers encrypted messages from last function
+
+function decipherThis(str: string): string {
+  return str.replace(
+    /\b(\d+)(\S?)(\S*?)(\S?)\b/g,
+    (_, a, b, c, d) => `${String.fromCharCode(a)}${d}${c}${b}`
+  );
+}
+console.log("20)", decipherThis("83yccesfullu 101dcrypten 109essage"));
+
+// 21) Given a Roman numeral return its value as a numeric decimal integer.
+
+function solution(roman: string): number {
+  const values: { [k: string]: number } = {
+    I: 1,
+    V: 5,
+    X: 10,
+    L: 50,
+    C: 100,
+    D: 500,
+    M: 1000,
+  };
+  let decimal: number = 0;
+  let previous: number = 0;
+  for (let rlt of [...roman].reverse()) {
+    values[rlt] >= previous
+      ? (decimal += values[rlt])
+      : (decimal -= values[rlt]);
+    previous = values[rlt];
+  }
+  return decimal;
+}
+console.log("21)", solution("XXI"));
+
+// 22) Given an array of intervals, return the sum of all the interval lengths. Overlapping intervals should only be counted once. eg:
+// [[1,4],[7, 10],[3, 5]] The sum of the lengths of these intervals is 7. Since [1, 4] and [3, 5] overlap, we can treat the interval as [1, 5], which has a length of 4.
+
+function sumOfIntervals(intervals: [number, number][]): number {
+  const aux: number[] = [];
+  for (let int of intervals) {
+    const interval: number[] = [];
+    while (int[0] < +int.slice(-1)) {
+      interval.push(int[0]);
+      int[0]++;
+    }
+    aux.push(...interval);
+  }
+  const set: Set<number> = new Set(aux);
+  return set.size;
+}
+console.log("22)",sumOfIntervals([[1, 3],[3, 5],[8, 11],[7, 10],]));
+
+// 23) Morse code decoder
+
+import { morseCode } from './morseCode/morseCode';
+
+
+
+
+
+
